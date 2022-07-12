@@ -7,8 +7,8 @@ class Bullet(pg.sprite.Sprite):
         super().__init__()
 
         # Sprite
-        (self.wl, self.hl) = limits
-        (self.w, self.h) = scale
+        (self.x_limit, self.y_limit) = limits
+        (self.width, self.height) = scale
         
         self.image = pg.image.load(image).convert_alpha()
         self.image = pg.transform.scale(self.image, scale)

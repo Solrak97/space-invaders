@@ -10,6 +10,10 @@ class Enemy(pg.sprite.Sprite):
         self.image = pg.transform.rotate(self.image, 180)
         self.rect = self.image.get_rect(center=pos)
 
+        # Lifetime
+        self.lifetime = 0
+        self.life_thresh = 1200
+
     
     def bullet_collision(self, point):
         return self.rect.collidepoint(point)
@@ -17,3 +21,6 @@ class Enemy(pg.sprite.Sprite):
     
     def update(self):
         self.rect.y += 1
+        self.lifetime += 1
+        if self.lifetime >= self.life_thresh:
+            self.kill()

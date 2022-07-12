@@ -9,8 +9,8 @@ class Player(pg.sprite.Sprite):
         super().__init__()
 
         # Sprite
-        (self.wl, self.hl) = limits
-        (self.w, self.h) = scale
+        (self.x_limit, self.y_limit) = limits
+        (self.width, self.height) = scale
         self.image = pg.image.load(image).convert_alpha()
         self.image = pg.transform.scale(self.image, scale)
         self.rect = self.image.get_rect(center=pos)
@@ -33,10 +33,10 @@ class Player(pg.sprite.Sprite):
         self.movement = max(-self.max_speed, min(self.movement, self.max_speed))
 
         if (self.rect.x + self.movement) < 0:
-            self.rect.x = self.w/2
+            self.rect.x = self.width/2
 
-        elif (self.rect.x + self.movement) > self.wl:
-            self.rect.x = self.wl - self.w
+        elif (self.rect.x + self.movement) > self.x_limit:
+            self.rect.x = self.x_limit - self.width
         
         else:
             self.rect.x += self.movement
@@ -44,7 +44,7 @@ class Player(pg.sprite.Sprite):
 
     def shoot(self):
         if self.shoot_frame >= self.shoot_thresh:
-            self.bullet_group.add(Bullet('Assets/bala1.png', pos=(self.rect.x + self.w / 2, self.rect.y), scale=(10, 10)))
+            self.bullet_group.add(Bullet('Assets/bala1.png', pos=(self.rect.x + self.width / 2, self.rect.y), scale=(10, 10)))
             self.shoot_frame = 0
 
 
