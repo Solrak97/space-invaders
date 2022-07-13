@@ -5,7 +5,7 @@
 ### Proyecto Final - Space Invaders
 ### Estudiantes:
  - Luis Carlos Quesada Rodríguez
- - Gianfranco Bagnarello Hernández
+ - Gianfranco Bagnarello Hernández 
 #
 ### Descripción del proyecto:
 Consiste en un simulador del juego "space invaders" donde el jugador se enfrenta a varias oleadas de enemigos, y debe dispararles para eliminarlas y obtener puntos. 
@@ -18,6 +18,7 @@ El simulador busca que un agente de Q-Learning logre aprender a jugar y ganar.
 - Player
 - Bullet
 - Net
+- Controller
 
 ### Resultados:
 - Pruebas realizadas con 10 oleadas:
