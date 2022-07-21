@@ -45,9 +45,9 @@ class Agent():
     # PRedice el estado y ejecuta una acción
 
     def get_action(self):
-        self.prediction_network(self.last_state)
-
-        return Actions.SHOOT
+        prediction = self.prediction_network(self.last_state)
+        action = torch.argmax(prediction, dim=1)[0].cpu()
+        return self.action_map[action]
 
 
 # Red neuronal del agente
@@ -65,6 +65,9 @@ class DQAgent(nn.Module):
         self.feature_activator = nn.LeakyReLU()
         self.feature_pool = nn.MaxPool2d(2, 2)
 
+        self.classification = nn.Linear(in_features=194*16*11, out_features=3)
+        self.classification_activation = nn.Sigmoid()
+
 
     def forward(self, x):
         x = self.feature_pool(self.feature_activator(self.cl1(x)))
@@ -74,6 +77,8 @@ class DQAgent(nn.Module):
         x = self.feature_pool(self.feature_activator(self.cl5(x)))
 
         x = x.view(-1, 194 * 16 * 11)
-        return x
 
-    pass
+        x = self.classification(x)
+        action = self.classification_activation(x)
+        
+        return action
