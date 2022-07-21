@@ -36,8 +36,6 @@ class Agent():
             self.device).type(torch.float32).unsqueeze(dim=0)
         pass
 
-    # torch.cuda.IntTensor
-
     # Recibe el reward y ejecuta la corrección de error
     def reward(self, reward):
         pass
