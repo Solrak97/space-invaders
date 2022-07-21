@@ -1,35 +1,71 @@
 import torch.nn as nn
-class   Agent(nn.Module):
+from PIL import Image
+from actions import Actions
+import numpy as np
+import torch
 
+
+class Agent():
     def __init__(self):
-        super(Agent, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels = 3, out_channels= 6, kernel_size = 5)
-        self.conv2 = nn.Conv2d(in_channels = 6, out_channels= 17, kernel_size = 5)
-        self.activation = nn.LeakyReLU()
-        self.activation_final = nn.LogSoftmax() 
-        self.pooling = nn.MaxPool2d(2, 2)
-        self.fc1 = nn.Linear(17 * 5 * 5, 144)
-        self.fc2 = nn.Linear(144, 89)
-        self.fc3 = nn.Linear(89, 10)
+        
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        self.action_map = [Actions.MOVE_LEFT, Actions.MOVE_RIGHT, Actions.SHOOT]
+        self.last_state = None
+
+        self.prediction_network = DQAgent().to(self.device)
+        self.target_network = DQAgent().to(self.device)
+        
+        '''
+        self.PATH = './agent.pth'
+        torch.save(model.state_dict(), PATH)
+        pass
+        '''
+
+
+    def update_agent():
+        pass
+    
+
+    def capture_state(self, state):
+        img = Image.frombytes('RGB', (640, 480), state, 'raw')
+        self.last_state = np.array(img)
+        
+        pass
 
     
-    def forward(self, x):
-        x = self.conv1(x)
-        x = self.activation(x)
-        x = self.pooling(x)
-        x = self.conv2(x)
-        x = self.activation(x)
-        x = self.pooling(x)
-        x = x.view(-1, 17 * 5 * 5)
-        x = self.fc1(x)
-        x = self.activation(x)
-        x = self.fc2(x)
-        x = self.activation(x)
-        x = self.fc3(x)
-        x = self.activation_final(x)
-        return x
-
-    def train_classifier(optimizer, model, x_true, x_false, accuracy=None, max_iters=100, batch_size=1000):
+    def reward():
         pass
+
+
+    def get_action(self):
+        self.prediction_network(self.last_state)
+
+        return Actions.SHOOT
+        
+
+
+
+class DQAgent(nn.Module):
+    def __init__(self):
+        super(DQAgent, self).__init__()
+        self.feature_extractor = []
+        self.feature_extractor.append(nn.Conv2d(in_channels = 3, out_channels= 6, kernel_size = 5))
+        self.feature_extractor.append(nn.LeakyReLU())
+        self.feature_extractor.append(nn.MaxPool2d(2, 2))
+
+        self.classificator = []
+        self.classificator.append(nn.Linear(17 * 5 * 5, 144))
+    
+    def forward(self, x):
+        for layer in self.feature_extractor:
+            x = layer(x)
+
+        x = x.view()
+
+        for layers in self.classificator:
+            x = layer(x)
+
+        return x
 
     pass

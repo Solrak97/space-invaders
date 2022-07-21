@@ -1,6 +1,5 @@
 import pygame as pg
 
-
 class Bullet(pg.sprite.Sprite):
 
     def __init__(self, image, pos, scale = (32, 32), limits = (640, 480)):

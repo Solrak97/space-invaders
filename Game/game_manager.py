@@ -1,5 +1,6 @@
 import pygame as pg
 from game import Game
+from agent import Agent
 
 # Setup
 SCREEN_SIZE = (640, 480)
@@ -13,9 +14,13 @@ pg.display.set_caption('Space Invaders')
 pg.display.set_icon(icon)
 
 screen = pg.display.set_mode(SCREEN_SIZE)
-pg.mixer.music.load("music.wav")
+pg.mixer.music.load("Assets/music.wav")
 pg.mixer.music.play()
 
-       
-game = Game(screen, SCREEN_SIZE, clock, FPS)
-game.human_game_loop()
+
+# Creación del modelo
+agent = Agent()   
+
+game = Game(screen, SCREEN_SIZE, clock, FPS, is_human=False, agent=agent)
+
+game.gameloop()

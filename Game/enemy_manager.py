@@ -92,19 +92,21 @@ class EnemyManager:
     def draw(self, screen):
         self.enemy_group.draw(screen)
 
+
     def update(self):
         self.create_wave()
-        self.check_downs()
         self.enemy_group.update()
 
         self.last_spawn += 1
         pass
 
+    # Enemies killed
     def check_downs(self):
+        points = 0
         for enemy in self.enemy_group:
             for bullet in self.bullet_group:
                 if enemy.bullet_collision((bullet.rect.x, bullet.rect.y)):
                     enemy.kill()
                     bullet.kill()
-
-    pass
+                    points += 1
+        return points

@@ -12,13 +12,14 @@ Consiste en un simulador del juego "space invaders" donde el jugador se enfrenta
 El simulador busca que un agente de Q-Learning logre aprender a jugar y ganar.
 
 ### Clases implementadas:
-- Bullet
-- Enemy
-- Game
-- Player
-- Bullet
-- Net
-- Controller
+- Actions: contiene las acciones posibles que pueden ser tomadas en el juego.
+- Agent: clase que contiene la red de DeepQlearning del agente.
+- Bullet: maneja detalles del los proyectiles disparados.
+- Enemy Manager: manejador de oleadas, movimiento de enemigos y contadores de puntuación la recompensa del agente.
+- Enemy: contiene propiedades de los enemigos individualmente, los tipos de enemigos, y sus interacciones con el ambiente.
+- Game manager: controla el juego importando clases y corriendo el agente.
+- Game: Importa clases de entidades para dibujar el juego y correr el game loop.
+- Player: 
 
 ### Resultados:
 - Pruebas realizadas con 10 oleadas:
