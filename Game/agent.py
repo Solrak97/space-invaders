@@ -75,6 +75,7 @@ class DQAgent(nn.Module):
             x = self.feature_activator(x)
             x = self.feature_pool(x)
 
+        x = x.view(-1, 194 * 16 * 11)
         return x
 
     pass
