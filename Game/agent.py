@@ -55,25 +55,23 @@ class DQAgent(nn.Module):
     def __init__(self):
         super(DQAgent, self).__init__()
 
-        filters = [3, 12, 24, 48, 96, 194]
+        self.cl1 = nn.Conv2d(in_channels=3, out_channels=12, kernel_size=5)
+        self.cl2 = nn.Conv2d(in_channels=12, out_channels=24, kernel_size=5)
+        self.cl3 = nn.Conv2d(in_channels=24, out_channels=48, kernel_size=5)
+        self.cl4 = nn.Conv2d(in_channels=48, out_channels=96, kernel_size=5)
+        self.cl5 = nn.Conv2d(in_channels=96, out_channels=194, kernel_size=5)
 
-        self.feature_extraction = []
-
-        for idx in range(1, len(filters)):
-            self.feature_extraction.append(nn.Conv2d(
-                in_channels=filters[idx - 1], out_channels=filters[idx], kernel_size=5))
 
         self.feature_activator = nn.LeakyReLU()
         self.feature_pool = nn.MaxPool2d(2, 2)
 
-        #self.activation_final = nn.Linear(17 * 5 * 5, 144)
 
     def forward(self, x):
-
-        for layer in self.feature_extraction:
-            x = layer(x)
-            x = self.feature_activator(x)
-            x = self.feature_pool(x)
+        x = self.feature_pool(self.feature_activator(self.cl1(x)))
+        x = self.feature_pool(self.feature_activator(self.cl2(x)))
+        x = self.feature_pool(self.feature_activator(self.cl3(x)))
+        x = self.feature_pool(self.feature_activator(self.cl4(x)))
+        x = self.feature_pool(self.feature_activator(self.cl5(x)))
 
         x = x.view(-1, 194 * 16 * 11)
         return x
