@@ -8,6 +8,19 @@ import torch
 class Agent():
     def __init__(self):
 
+        # Agent Settings
+        self.EMPTY_REWARD = -1
+        self.KILL_REWARD = 100
+        self.DISCOUNT_FACTOR = 1e-3
+        self.EPS_GREEDY = 1
+        self.DECAY = 1e-5
+        self.MEM_CAP = 1000
+
+        
+        # Memory
+        self.rewind_memory = []
+
+        # Agent networks
         self.device = torch.device(
             'cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -18,13 +31,16 @@ class Agent():
         self.prediction_network = DQAgent().to(self.device)
         self.target_network = DQAgent().to(self.device)
 
+        self.optimizer = torch.optim.Adam(self.prediction_network.parameters)
+
         '''
         self.PATH = './agent.pth'
         torch.save(model.state_dict(), PATH)
         '''
 
     # Actualiza el agente cuando se obtiene un fitting aceptable
-    def update_agent():
+    def update_agent(self):
+        self.target_network.parameters = self.prediction_network.parameters
         pass
 
     # Recibe el estado
