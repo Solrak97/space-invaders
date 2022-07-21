@@ -12,32 +12,38 @@ class Enemy(pg.sprite.Sprite):
 
         # Lifetime
         self.lifetime = 0
-        self.life_thresh = 1200
 
         # Speed
-        self.speed = 1
-        self.frame_speed = 1
+        self.speed = 2
+        self.frame_speed = 15
 
         # Space limits
         self.y_limit = y_limit
+
+        # Movement patterns
+        self.movement_pattern = movement_pattern
+        self.pattern_state = 0
 
     
     def bullet_collision(self, point):
         return self.rect.collidepoint(point)
 
     
-    def move(self):
+    def down_move(self):
         if self.lifetime % self.frame_speed == 0:
             self.rect.y += self.speed
+
 
     
     def on_floor(self):
         if self.rect.y > self.y_limit:
             self.kill()
+            return True
+        
+        else:
+            return False
         
 
     def update(self):
-        self.move()
-        self.on_floor()
-        
+        self.down_move()
         self.lifetime += 1

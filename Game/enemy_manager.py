@@ -1,6 +1,5 @@
 import pygame as pg
 import random
-
 from enemy import Enemy
 
 
@@ -16,55 +15,78 @@ class EnemyManager:
 
         # Spawntime
         self.last_spawn = 0
-        self.wave_thresh = 240
+        self.wave_thresh = 800
 
         # Enemy Scale
-        self.enemy_widht, self.enemy_height = (32, 32)
+        self.enemy_width, self.enemy_height = (32, 32)
         pass
 
+    def enemy_trespasses(self):
+        is_floored = False
+        for enemy in self.enemy_group:
+            floor = enemy.on_floor()
+            if floor:
+                is_floored = True
+
+        return is_floored
+
     def wave_t1(self):
-        for x in range(int(self.x_limit / self.enemy_widht)):
-            for y in range(4):
-                enemy = Enemy((x * self.enemy_widht + self.enemy_widht / 2, -y *
-                              self.enemy_height), 'Assets/enemigo0.png', self.y_limit, scale=(self.enemy_widht, self.enemy_height))
-                self.enemy_group.add(enemy)
+        n_enemys = 10
+        offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
+
+        for x in range(n_enemys):
+            enemy = Enemy(((x * self.enemy_width + offset, 0)), 'Assets/enemigo0.png',
+                          self.y_limit, scale=(self.enemy_width, self.enemy_height))
+            self.enemy_group.add(enemy)
 
     def wave_t2(self):
-        for x in range(int(self.x_limit / self.enemy_widht)):
-            for y in range(4):
-                enemy = Enemy((x * self.enemy_widht + self.enemy_widht / 2, -y *
-                              self.enemy_height), 'Assets/enemigo1.png', self.y_limit, scale=(self.enemy_widht, self.enemy_height))
+        n_enemys = 20
+        offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
+
+        for x in range(n_enemys):
+            for y in range(2):
+                enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
+                              'Assets/enemigo1.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
 
     def wave_t3(self):
-        for x in range(int(self.x_limit / self.enemy_widht)):
-            for y in range(4):
-                enemy = Enemy((x * self.enemy_widht + self.enemy_widht / 2, -y *
-                              self.enemy_height), 'Assets/enemigo2.png', self.y_limit, scale=(self.enemy_widht, self.enemy_height))
+        n_enemys = 30
+        offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
+
+        for x in range(n_enemys):
+            for y in range(3):
+                enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
+                              'Assets/enemigo2.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
 
     def wave_t4(self):
-        for x in range(int(self.x_limit / self.enemy_widht)):
+        n_enemys = 40
+        offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
+
+        for x in range(n_enemys):
             for y in range(4):
-                enemy = Enemy((x * self.enemy_widht + self.enemy_widht / 2, -y *
-                              self.enemy_height), 'Assets/enemigo3.png', self.y_limit, scale=(self.enemy_widht, self.enemy_height))
+                enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
+                              'Assets/enemigo3.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
-    
+
     def wave_t5(self):
-        for x in range(int(self.x_limit / self.enemy_widht)):
-            for y in range(4):
-                enemy = Enemy((x * self.enemy_widht + self.enemy_widht / 2, -y *
-                              self.enemy_height), 'Assets/enemigo4.png', self.y_limit, scale=(self.enemy_widht, self.enemy_height))
+        n_enemys = int(self.x_limit / self.enemy_width)
+        offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
+
+        for x in range(n_enemys):
+            for y in range(5):
+                enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
+                              'Assets/enemigo4.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
 
     def create_wave(self):
-        waves = [self.wave_t1, self.wave_t2, self.wave_t3, self.wave_t4, self.wave_t5]
+
+        waves = [self.wave_t1, self.wave_t2,
+                 self.wave_t3, self.wave_t4, self.wave_t5]
+
         if self.last_spawn >= self.wave_thresh:
-
             random.choice(waves)()
-
             self.last_spawn = 0
-
         pass
 
     def draw(self, screen):

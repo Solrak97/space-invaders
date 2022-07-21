@@ -13,18 +13,13 @@ class Bullet(pg.sprite.Sprite):
         self.image = pg.image.load(image).convert_alpha()
         self.image = pg.transform.scale(self.image, scale)
         self.rect = self.image.get_rect(center=pos)
-
-        # Bullet lifetime
-        self.lifetime = 0
-        self.life_thresh = 250
-        
         pass
 
 
     def update(self):
-        self.rect.y -= 3
-        self.lifetime += 1
+        self.rect.y -= 7
 
-        if self.lifetime >= self.life_thresh:
+        if self.rect.y < 0:
             self.kill()
+        
     pass

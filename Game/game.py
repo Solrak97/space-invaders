@@ -1,62 +1,83 @@
-import pygame as pg
 import sys
-
 from enemy_manager import EnemyManager
 from player import Player
-
-# Setup
-SCREEN_SIZE = (640, 480)
-FPS = 60
-
-pg.init()
-
-clock = pg.time.Clock()
-icon = pg.image.load('Assets/green.png')
-pg.display.set_caption('Space Invaders')
-pg.display.set_icon(icon)
-
-screen = pg.display.set_mode(SCREEN_SIZE)
+import pygame as pg
 
 
-# Gameobject Groups
-player_group = pg.sprite.Group()
-enemy_group = pg.sprite.Group()
-bullet_group = pg.sprite.Group()
+class Game():
+    def __init__(self, display, display_size, clock, fps, is_human=False):
+        # Game settings
+        self.display = display
+        self.display_size = display_size
+        self.clock = clock
+        self.fps = fps
+        self.is_human = is_human
 
-# Enemy manager
-enemy_manager = EnemyManager(enemy_group, bullet_group)
-
-# Player setup
-# Fix player pos and movement bugs
-player = Player((SCREEN_SIZE[0] / 2, 460), 'Assets/jugador.png', bullet_group)
-player_group.add(player)
-
-
-
-# Graphics update, kinda like a global draw
-def draw_state():
-    enemy_manager.draw(screen)
-    player_group.draw(screen)
-    bullet_group.draw(screen)
+        self.player_group = pg.sprite.Group()
+        self.enemy_group = pg.sprite.Group()
+        self.bullet_group = pg.sprite.Group()
 
 
-def update_state():
-    enemy_manager.update()
-    player_group.update()
-    bullet_group.update()
+        # Enemy manager
+        self.enemy_manager = EnemyManager(self.enemy_group, self.bullet_group)
 
 
-# Gameloop
-while True:
+        # Player setup
+        self.player = Player((self.display_size[0] / 2, 460), 'Assets/jugador.png', self.bullet_group)
+        self.player_group.add(self.player)
+
+
+        # Score
+        self.score = 0
+
+        
+
+    # Graphics update
+    def draw_state(self):
+        self.enemy_manager.draw(self.display)
+        self.player_group.draw(self.display)
+        self.bullet_group.draw(self.display)
+
+
+
+    # Internal game object state update
+    def update_state(self):
+        self.enemy_manager.update()
+        self.player_group.update()
+        self.bullet_group.update()
+
+
+    # Game logic goes brrrr
+    def human_game_loop(self):
+        while not self.enemy_manager.enemy_trespasses():
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    pg.quit()
+                    sys.exit()
+
+            self.display.fill((0, 0, 0))
+            self.draw_state()
+            self.update_state()
+            
+            pg.display.flip()
+            self.clock.tick(self.fps)
+
     
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            sys.exit()
+    def ai_gameloop(self, model):
+        while not self.enemy_manager.enemy_trespasses():
+            self.display.fill((0, 0, 0))
 
-    screen.fill((0, 0, 0))
-    draw_state()
-    update_state()
+            # Captura del estado como imagen
 
-    pg.display.flip()
-    clock.tick(FPS)
+            # Petición de predicción
+
+            # Actuador sobre la petición
+
+            # Calculo de la recompensa
+
+            self.draw_state()
+            self.update_state()
+            
+            pg.display.flip()
+            self.clock.tick(self.fps)
+        pass
