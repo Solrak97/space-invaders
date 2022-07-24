@@ -33,4 +33,4 @@ for sim in range(game_sims):
 
     if sim % 10 == 0:
         agent.update_networks()
-        agent.store_model('model.pth')
+        agent.store_model('model2.pth')

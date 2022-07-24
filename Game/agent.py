@@ -10,7 +10,7 @@ class Agent():
 
         # Agent Settings
         self.empty_reward = -10
-        self.kill_reward = 1000
+        self.kill_reward = 100
         self.discount_factor = 1e-3
         self.eps_greedy = 1
         self.decay = 1e-4

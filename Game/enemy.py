@@ -15,7 +15,7 @@ class Enemy(pg.sprite.Sprite):
 
         # Speed
         self.speed = 2
-        self.frame_speed = 15
+        self.frame_speed = 1
 
         # Space limits
         self.y_limit = y_limit

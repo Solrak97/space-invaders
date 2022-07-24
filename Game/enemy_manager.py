@@ -15,7 +15,7 @@ class EnemyManager:
 
         # Spawntime
         self.last_spawn = 0
-        self.wave_thresh = 800
+        self.wave_thresh = 50
 
         # Enemy Scale
         self.enemy_width, self.enemy_height = (32, 32)
@@ -34,7 +34,7 @@ class EnemyManager:
         return is_floored
 
     def wave_t1(self):
-        n_enemys = 5
+        n_enemys = 18
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
@@ -43,7 +43,7 @@ class EnemyManager:
             self.enemy_group.add(enemy)
 
     def wave_t2(self):
-        n_enemys = 6
+        n_enemys = 18
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
@@ -53,7 +53,7 @@ class EnemyManager:
                 self.enemy_group.add(enemy)
 
     def wave_t3(self):
-        n_enemys = 7
+        n_enemys = 18
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
@@ -63,7 +63,7 @@ class EnemyManager:
                 self.enemy_group.add(enemy)
 
     def wave_t4(self):
-        n_enemys = 8
+        n_enemys = 18
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
@@ -73,7 +73,7 @@ class EnemyManager:
                 self.enemy_group.add(enemy)
 
     def wave_t5(self):
-        n_enemys = 9
+        n_enemys = 18
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
@@ -96,10 +96,10 @@ class EnemyManager:
     def move_enemies(self):
         if self.last_anim_frame < 40: 
             for enemy in self.enemy_group:
-                enemy.rect.x += 1
+                enemy.rect.y += 1
         elif self.last_anim_frame < 80: 
             for enemy in self.enemy_group:
-                enemy.rect.x -= 1
+                enemy.rect.y -= 1
         else:
             self.last_anim_frame = 0
 
@@ -107,7 +107,7 @@ class EnemyManager:
     def update(self):
         self.create_wave()
         self.enemy_group.update()
-        self.move_enemies()
+        #self.move_enemies()
         self.last_spawn += 1
         self.last_anim_frame += 1
         
