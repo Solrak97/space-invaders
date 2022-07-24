@@ -27,6 +27,22 @@ class Agent():
         self.optimizer = torch.optim.Adam(self.prediction_network.parameters())
 
 
+    def store_model(self, path):
+        model_params = {}
+        model_params['prediction_network'] = self.prediction_network.parameters()
+        model_params['target_network'] = self.target_network.parameters()
+        
+        torch.save(model_params, path)
+
+
+
+    def load_model(self, path):
+        model_params = torch.load(path, map_location=self.device)
+        self.prediction_network.params = model_params['prediction_network']
+        self.target_network.params = model_params['target_network']
+        
+
+
     # Transforms str into torch tensor
     def to_tensor(self, str_img):
         img = Image.frombytes('RGB', (640, 480), str_img, 'raw')

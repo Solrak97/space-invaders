@@ -22,15 +22,14 @@ pg.mixer.music.play()
 # Creación del modelo
 agent = Agent()   
 
-game_sims = 10
+game_sims = 1000
 
 for sim in range(game_sims):
 
+    
     game = Game(screen, SCREEN_SIZE)
     agent.simulation(game)
 
 
-'''
-        self.PATH = './agent.pth'
-        torch.save(model.state_dict(), PATH)
-        '''
+    if sim % 10 == 0:
+        agent.store('model.xd')
