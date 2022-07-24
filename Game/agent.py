@@ -9,7 +9,7 @@ class Agent():
     def __init__(self):
 
         # Agent Settings
-        self.empty_reward = -1
+        self.empty_reward = -10
         self.kill_reward = 1000
         self.discount_factor = 1e-3
         self.eps_greedy = 1
@@ -29,8 +29,8 @@ class Agent():
 
     def store_model(self, path):
         model_params = {}
-        model_params['prediction_network'] = self.prediction_network.parameters()
-        model_params['target_network'] = self.target_network.parameters()
+        model_params['prediction_network'] = self.prediction_network.state_dict()
+        model_params['target_network'] = self.target_network.state_dict()
         
         torch.save(model_params, path)
 
@@ -38,8 +38,8 @@ class Agent():
 
     def load_model(self, path):
         model_params = torch.load(path, map_location=self.device)
-        self.prediction_network.params = model_params['prediction_network']
-        self.target_network.params = model_params['target_network']
+        self.prediction_network.load_state_dict( model_params['prediction_network'] )
+        self.target_network.load_state_dict(model_params['target_network'] )
         
 
 
@@ -87,6 +87,10 @@ class Agent():
         
         if learn:
             state, reward = env.preform_action(action)
+            
+            reward *= self.kill_reward
+            reward += self.empty_reward
+            
             loss = self.calc_loss(reward, q_val, next_q)
 
             loss.backward()
@@ -99,7 +103,8 @@ class Agent():
         
             
     # Recibe el reward y ejecuta la corrección de error
-    def update(self, reward):
+    def update_networks(self):
+        self.target_network.load_state_dict(self.prediction_network.state_dict())
         pass
 
 
