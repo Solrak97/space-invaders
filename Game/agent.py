@@ -86,6 +86,7 @@ class Agent():
         
         if learn:
             state, reward = env.preform_action(action)
+            state = self.to_tensor(state)
             
             next_q = self.target_network(state)
             

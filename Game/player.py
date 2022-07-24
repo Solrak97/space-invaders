@@ -25,7 +25,7 @@ class Player(pg.sprite.Sprite):
 
         # Frames
         self.shoot_frame = 0
-        self.shoot_thresh = 20
+        self.shoot_thresh = 5
 
     
     def move(self, velocity):

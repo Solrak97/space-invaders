@@ -29,7 +29,8 @@ for sim in range(game_sims):
     
     game = Game(screen, SCREEN_SIZE)
     agent.simulation(game)
-
+    print(f"########################ITERATION N {sim} ###################################")
+    print(f"Score {game.score}")
 
     if sim % 10 == 0:
         agent.update_networks()
