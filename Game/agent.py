@@ -96,6 +96,8 @@ class Agent():
             loss = self.calc_loss(reward, q_val, next_q)
 
             loss.backward()
+            print(f'Loss {loss}')
+            
             self.optimizer.step()
 
         else:
