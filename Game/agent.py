@@ -1,67 +1,104 @@
+from random import random
 import torch.nn as nn
 from PIL import Image
 from actions import Actions
 import numpy as np
 import torch
 
-
 class Agent():
     def __init__(self):
 
         # Agent Settings
         self.EMPTY_REWARD = -1
-        self.KILL_REWARD = 100
+        self.KILL_REWARD = 1000
         self.DISCOUNT_FACTOR = 1e-3
-        self.EPS_GREEDY = 1
-        self.DECAY = 1e-5
-        self.MEM_CAP = 1000
-
-        
-        # Memory
-        self.rewind_memory = []
+        self.eps_greedy = 1
+        self.decay = 1e-4
 
         # Agent networks
-        self.device = torch.device(
-            'cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        self.action_map = [Actions.MOVE_LEFT,
-                           Actions.MOVE_RIGHT, Actions.SHOOT]
-        self.last_state = None
+        self.action_map = [Actions.MOVE_LEFT,Actions.MOVE_RIGHT, Actions.SHOOT]
 
         self.prediction_network = DQAgent().to(self.device)
         self.target_network = DQAgent().to(self.device)
 
         self.optimizer = torch.optim.Adam(self.prediction_network.parameters)
 
-        '''
-        self.PATH = './agent.pth'
-        torch.save(model.state_dict(), PATH)
-        '''
 
-    # Actualiza el agente cuando se obtiene un fitting aceptable
-    def update_agent(self):
-        self.target_network.parameters = self.prediction_network.parameters
-        pass
+
+    def play(self, env):
+        while (not env.is_terminal_state()):
+            self.step(env, learn=False)
+
+
+
+    def simulation(self, env):
+        while (not env.is_terminal_state()):
+            self.step(env, learn=True)
+
+        if self.eps_greedy >= self.decay:
+            self.eps_greedy -= self.decay
+
+
+
+    def step(self, env, learn=True):
+        state = env.get_state()
+        q_index = self.state_to_index(state)
+
+        if learn:
+            action_index = self.select_action(q_index)
+            reward, state = env.perform_action(self.actions[action_index])
+            
+
+            # Update
+            q_index_prime = self.state_to_index(state)
+            self.qtable[q_index][action_index] = (self.qtable[q_index][action_index] + self.learning_rate * (
+                reward + self.discount_factor * np.max(self.qtable[q_index_prime]) - self.qtable[q_index][action_index]))
+
+        else:
+            action_index = np.argmax(self.qtable[q_index])
+            env.perform_action(self.actions[action_index])
+        
+
+    # Transforms str into torch tensor
+    def to_tensor(self, str_img):
+        img = Image.frombytes('RGB', (640, 480), str_img, 'raw')
+        img_array = np.array(img).reshape((3, 640, 480))
+        state = torch.tensor(img_array).to(self.device).type(torch.float32).unsqueeze(dim=0)
+        return state
+
+
 
     # Recibe el estado
+    def get_Q(self, state):
+        img = self.to_tensor(state)
+        Q_val = self.prediction_network(img)
+        
+        return Q_val
 
-    def capture_state(self, state):
-        img = Image.frombytes('RGB', (640, 480), state, 'raw')
-        img_array = np.array(img).reshape((3, 640, 480))
-        self.last_state = torch.tensor(img_array).to(
-            self.device).type(torch.float32).unsqueeze(dim=0)
-        pass
+
+
+    def act(self, state):
+        q_vals = self.get_Q(state)
+
+        if self.training and random.random() < self.EPS_GREEDY:
+            action = random.sample(self.action_map)
+
+        else:
+            action = torch.argmax(q_vals, dim=1)[0].cpu()
+            action = self.action_map[action]
+
+        return action
+        
 
     # Recibe el reward y ejecuta la corrección de error
-    def reward(self, reward):
+    def update(self, reward):
+        error = reward + self.DISCOUNT_FACTOR * self.future_Q - self.Q_val
+        self.optimizer
         pass
 
-    # PRedice el estado y ejecuta una acción
 
-    def get_action(self):
-        prediction = self.prediction_network(self.last_state)
-        action = torch.argmax(prediction, dim=1)[0].cpu()
-        return self.action_map[action]
 
 
 # Red neuronal del agente
@@ -80,8 +117,7 @@ class DQAgent(nn.Module):
         self.feature_pool = nn.MaxPool2d(2, 2)
 
         self.classification = nn.Linear(in_features=194*16*11, out_features=3)
-        self.classification_activation = nn.Sigmoid()
-
+        
 
     def forward(self, x):
         x = self.feature_pool(self.feature_activator(self.cl1(x)))
@@ -92,7 +128,6 @@ class DQAgent(nn.Module):
 
         x = x.view(-1, 194 * 16 * 11)
 
-        x = self.classification(x)
-        action = self.classification_activation(x)
+        action = self.classification(x)
         
         return action

@@ -5,17 +5,11 @@ import pygame as pg
 
 
 class Game():
-    def __init__(self, display, display_size, clock, fps, is_human=True, agent=None):
-        
-        # AI Settings
-        self.agent = agent
-        self.is_human = is_human
+    def __init__(self, display, display_size):
 
         # Game settings
         self.display = display
         self.display_size = display_size
-        self.clock = clock
-        self.fps = fps
 
         self.player_group = pg.sprite.Group()
         self.enemy_group = pg.sprite.Group()
@@ -25,7 +19,7 @@ class Game():
         self.enemy_manager = EnemyManager(self.enemy_group, self.bullet_group)
 
         # Player setup
-        self.player = Player(is_human, (self.display_size[0] / 2, 460), 'Assets/jugador.png', self.bullet_group)
+        self.player = Player((self.display_size[0] / 2, 460), 'Assets/jugador.png', self.bullet_group)
         self.player_group.add(self.player)
 
         # Score
@@ -52,33 +46,27 @@ class Game():
 
     
 
-    def gameloop(self):
-        while not self.enemy_manager.enemy_trespasses():
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    pg.quit()
-                    sys.exit()
+    def perform_action(self, action):
+
+        self.player.act(action)
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+        
+        self.display.fill((0, 0, 0))
+        self.draw_state()
+        self.update_state()
+
+        downs = self.enemy_manager.check_downs()
+        self.score += downs
+        pil_string_image = pg.image.tostring(self.display, "RGBA",False)
+        pg.display.flip()
+        
+        return(pil_string_image, downs)      
             
-            if not self.is_human:
-                # Captura del estado como imagen
-                pil_string_image = pg.image.tostring(self.display, "RGBA",False)
-                self.agent.capture_state(pil_string_image)
-
-                # Petición de predicción
-                action = self.agent.get_action()
-
-                # Actuador sobre la petición
-                self.player.act(action)
-
-                # Calculo de la recompensa
-                self.agent.reward(self.enemy_manager.check_downs())
 
 
-            self.score += self.enemy_manager.check_downs()
-            self.display.fill((0, 0, 0))
-            self.draw_state()
-            self.update_state()
-            
-            pg.display.flip()
-            self.clock.tick(self.fps)
-        pass
+    def state_is_terminal(self):
+        return self.enemy_manager.enemy_trespasses()

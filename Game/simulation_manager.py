@@ -1,4 +1,5 @@
 import pygame as pg
+from actions import Actions
 from game import Game
 from agent import Agent
 
@@ -21,6 +22,15 @@ pg.mixer.music.play()
 # Creación del modelo
 agent = Agent()   
 
-game = Game(screen, SCREEN_SIZE, clock, FPS, is_human=False, agent=agent)
+game_sims = 10
 
-game.gameloop()
+for sim in game_sims:
+
+    game = Game(screen, SCREEN_SIZE)
+    agent.simulation(game)
+
+
+'''
+        self.PATH = './agent.pth'
+        torch.save(model.state_dict(), PATH)
+        '''

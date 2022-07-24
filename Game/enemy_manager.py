@@ -92,7 +92,6 @@ class EnemyManager:
     def draw(self, screen):
         self.enemy_group.draw(screen)
 
-
     def update(self):
         self.create_wave()
         self.enemy_group.update()

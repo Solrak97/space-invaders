@@ -5,10 +5,8 @@ from bullet import Bullet
 
 class Player(pg.sprite.Sprite):
 
-    def __init__(self, is_human, pos, image, bullet_group, scale=(32, 32), limits = (640, 480)):
+    def __init__(self, pos, image, bullet_group, scale=(32, 32), limits = (640, 480)):
         super().__init__()
-        
-        self.is_human = is_human
         
         # Sprite
         (self.x_limit, self.y_limit) = limits
@@ -68,23 +66,5 @@ class Player(pg.sprite.Sprite):
 
 
     def update(self):
-        if self.is_human:
-            self.controller(pg.key.get_pressed())
-
         self.shoot_frame += 1
-
-
-    def controller(self, keystate):
-        if keystate[pg.K_a]:
-            self.move_left()
-        
-        if keystate[pg.K_d]:
-            self.move_right()
-
-        # Shoot
-        if keystate[pg.K_SPACE]:
-            self.shoot()
-
-        if not keystate[pg.K_a] and not keystate[pg.K_d] :
-            self.movement = 0
            
