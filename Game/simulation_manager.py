@@ -32,4 +32,4 @@ for sim in range(game_sims):
 
 
     if sim % 10 == 0:
-        agent.store('model.xd')
+        agent.store_model('model.pth')
