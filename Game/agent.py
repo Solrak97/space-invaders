@@ -80,13 +80,14 @@ class Agent():
     def step(self, env, learn=True):
         state = self.to_tensor(env.get_state())
         q_val = self.prediction_network(state)
-        next_q = self.target_network(state)
 
         
         action = self.q_val2act(q_val)
         
         if learn:
             state, reward = env.preform_action(action)
+            
+            next_q = self.target_network(state)
             
             reward *= self.kill_reward
             reward += self.empty_reward
