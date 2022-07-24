@@ -24,7 +24,7 @@ agent = Agent()
 
 game_sims = 10
 
-for sim in game_sims:
+for sim in range(game_sims):
 
     game = Game(screen, SCREEN_SIZE)
     agent.simulation(game)

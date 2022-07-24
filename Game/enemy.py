@@ -28,11 +28,31 @@ class Enemy(pg.sprite.Sprite):
     def bullet_collision(self, point):
         return self.rect.collidepoint(point)
 
+
+    def move_left(self):
+        self.move(-self.velocity)
+        
+
+    def move_right(self):
+        self.move(self.velocity)
+
     
     def down_move(self):
         if self.lifetime % self.frame_speed == 0:
             self.rect.y += self.speed
 
+    def move(self, velocity):
+        self.movement += velocity
+        self.movement = max(-self.max_speed, min(self.movement, self.max_speed))
+
+        if (self.rect.x + self.movement) < 0:
+            self.rect.x = self.width/2
+
+        elif (self.rect.x + self.movement) > self.x_limit:
+            self.rect.x = self.x_limit - self.width
+        
+        else:
+            self.rect.x += self.movement
 
     
     def on_floor(self):

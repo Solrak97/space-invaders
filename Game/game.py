@@ -46,7 +46,7 @@ class Game():
 
     
 
-    def perform_action(self, action):
+    def preform_action(self, action):
 
         self.player.act(action)
 
@@ -68,5 +68,10 @@ class Game():
             
 
 
-    def state_is_terminal(self):
+    def get_state(self):
+        return pg.image.tostring(self.display, "RGBA",False) 
+
+
+
+    def is_terminal_state(self):
         return self.enemy_manager.enemy_trespasses()

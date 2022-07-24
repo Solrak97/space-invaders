@@ -1,4 +1,4 @@
-from random import random
+import random
 import torch.nn as nn
 from PIL import Image
 from actions import Actions
@@ -9,21 +9,40 @@ class Agent():
     def __init__(self):
 
         # Agent Settings
-        self.EMPTY_REWARD = -1
-        self.KILL_REWARD = 1000
-        self.DISCOUNT_FACTOR = 1e-3
+        self.empty_reward = -1
+        self.kill_reward = 1000
+        self.discount_factor = 1e-3
         self.eps_greedy = 1
         self.decay = 1e-4
 
-        # Agent networks
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
         self.action_map = [Actions.MOVE_LEFT,Actions.MOVE_RIGHT, Actions.SHOOT]
 
+        # rewind memory
+        self.memory = {}
+        
+        # Agent networks
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.prediction_network = DQAgent().to(self.device)
         self.target_network = DQAgent().to(self.device)
+        self.optimizer = torch.optim.Adam(self.prediction_network.parameters())
 
-        self.optimizer = torch.optim.Adam(self.prediction_network.parameters)
+
+    # Transforms str into torch tensor
+    def to_tensor(self, str_img):
+        img = Image.frombytes('RGB', (640, 480), str_img, 'raw')
+        img_array = np.array(img).reshape((3, 640, 480))
+        state = torch.tensor(img_array).to(self.device).type(torch.float32).unsqueeze(dim=0)
+        return state
+
+
+    def q_val2act(self, q_val):
+        idx =  torch.argmax(q_val)
+        return self.action_map[idx]
+
+
+
+    def calc_loss(self, reward, q_value, next_q):
+        return (reward + self.discount_factor * torch.max(next_q) - torch.max(q_value)) ** 2
 
 
 
@@ -43,59 +62,28 @@ class Agent():
 
 
     def step(self, env, learn=True):
-        state = env.get_state()
-        q_index = self.state_to_index(state)
+        state = self.to_tensor(env.get_state())
+        q_val = self.prediction_network(state)
+        next_q = self.target_network(state)
 
+        
+        action = self.q_val2act(q_val)
+        
         if learn:
-            action_index = self.select_action(q_index)
-            reward, state = env.perform_action(self.actions[action_index])
+            state, reward = env.preform_action(action)
+            loss = self.calc_loss(reward, q_val, next_q)
+
+            loss.backward()
+            self.optimizer.step()
+
+        else:
+            env.preform_action(action)
+         
+
+        
             
-
-            # Update
-            q_index_prime = self.state_to_index(state)
-            self.qtable[q_index][action_index] = (self.qtable[q_index][action_index] + self.learning_rate * (
-                reward + self.discount_factor * np.max(self.qtable[q_index_prime]) - self.qtable[q_index][action_index]))
-
-        else:
-            action_index = np.argmax(self.qtable[q_index])
-            env.perform_action(self.actions[action_index])
-        
-
-    # Transforms str into torch tensor
-    def to_tensor(self, str_img):
-        img = Image.frombytes('RGB', (640, 480), str_img, 'raw')
-        img_array = np.array(img).reshape((3, 640, 480))
-        state = torch.tensor(img_array).to(self.device).type(torch.float32).unsqueeze(dim=0)
-        return state
-
-
-
-    # Recibe el estado
-    def get_Q(self, state):
-        img = self.to_tensor(state)
-        Q_val = self.prediction_network(img)
-        
-        return Q_val
-
-
-
-    def act(self, state):
-        q_vals = self.get_Q(state)
-
-        if self.training and random.random() < self.EPS_GREEDY:
-            action = random.sample(self.action_map)
-
-        else:
-            action = torch.argmax(q_vals, dim=1)[0].cpu()
-            action = self.action_map[action]
-
-        return action
-        
-
     # Recibe el reward y ejecuta la corrección de error
     def update(self, reward):
-        error = reward + self.DISCOUNT_FACTOR * self.future_Q - self.Q_val
-        self.optimizer
         pass
 
 

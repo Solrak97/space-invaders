@@ -19,7 +19,10 @@ class EnemyManager:
 
         # Enemy Scale
         self.enemy_width, self.enemy_height = (32, 32)
+
+        self.last_anim_frame = 0
         pass
+
 
     def enemy_trespasses(self):
         is_floored = False
@@ -31,7 +34,7 @@ class EnemyManager:
         return is_floored
 
     def wave_t1(self):
-        n_enemys = 10
+        n_enemys = 5
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
@@ -40,65 +43,74 @@ class EnemyManager:
             self.enemy_group.add(enemy)
 
     def wave_t2(self):
-        n_enemys = 20
+        n_enemys = 6
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
-            for y in range(2):
+            for y in range(1):
                 enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
                               'Assets/enemigo1.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
 
     def wave_t3(self):
-        n_enemys = 30
+        n_enemys = 7
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
-            for y in range(3):
+            for y in range(1):
                 enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
                               'Assets/enemigo2.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
 
     def wave_t4(self):
-        n_enemys = 40
+        n_enemys = 8
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
-            for y in range(4):
+            for y in range(1):
                 enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
                               'Assets/enemigo3.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
 
     def wave_t5(self):
-        n_enemys = int(self.x_limit / self.enemy_width)
+        n_enemys = 9
         offset = (self.x_limit - (n_enemys * self.enemy_width)) / 2
 
         for x in range(n_enemys):
-            for y in range(5):
+            for y in range(1):
                 enemy = Enemy(((x * self.enemy_width + offset, -y * self.enemy_height)),
                               'Assets/enemigo4.png', self.y_limit, scale=(self.enemy_width, self.enemy_height))
                 self.enemy_group.add(enemy)
 
     def create_wave(self):
-
         waves = [self.wave_t1, self.wave_t2,
                  self.wave_t3, self.wave_t4, self.wave_t5]
 
         if self.last_spawn >= self.wave_thresh:
             random.choice(waves)()
             self.last_spawn = 0
-        pass
 
     def draw(self, screen):
         self.enemy_group.draw(screen)
+        
+    def move_enemies(self):
+        if self.last_anim_frame < 40: 
+            for enemy in self.enemy_group:
+                enemy.rect.x += 1
+        elif self.last_anim_frame < 80: 
+            for enemy in self.enemy_group:
+                enemy.rect.x -= 1
+        else:
+            self.last_anim_frame = 0
+
 
     def update(self):
         self.create_wave()
         self.enemy_group.update()
-
+        self.move_enemies()
         self.last_spawn += 1
-        pass
-
+        self.last_anim_frame += 1
+        
     # Enemies killed
     def check_downs(self):
         points = 0
