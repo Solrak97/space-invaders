@@ -8,12 +8,12 @@
  - Gianfranco Bagnarello Hernández 
 # 
 ### Descripción del proyecto:
-"Space Invaders" consiste en un juego donde se debe luchar contra naves espaciales y destruir la cantidad máxima posible. Para ganar se deben destruir todas las naves. En el variante implementado, las naves llegan en oleadas de tamaño fijo. El jugador debe disparar proyectiles e intentar destruir la mayor cantidad posible antes de que alguna llegue al límite inferior de la pantalla, caso en el que se pierde el juego y se debe volver a empezar. Algunos ejemplos de la interfaz de este juego a través de los años son los siguientes:
+"Space Invaders" consiste en un juego donde se debe luchar contra naves espaciales y destruir la cantidad máxima posible. Para ganar se deben destruir todas las naves. En el variante implementado, las naves llegan en oleadas de tamaño fijo. El jugador debe disparar proyectiles e intentar destruir la mayor cantidad posible antes de que alguna llegue al límite inferior de la pantalla, caso en el que se pierde el juego y se debe volver a empezar. En esta implementación se utilizó la biblioteca PyGame para la interfaz gráfica. Algunos ejemplos de la interfaz de este juego a través de los años son los siguientes:
 ![Alt Text](/Results/old1.jpg)
 ![Alt Text](/Results/old2.png)
 ![Alt Text](/Results/old3.jpg)
 
-El tipo de algoritmo de aprendizaje mecánico implementado fue Deep Q learning, que utiliza redes neuronales, en este caso una de predicciones y otra de objetivo, para explorar el juego e intentar aproximar un modelo que permita maximizar una recompensa obtenida. En este caso, al agente se le otorga una recompensa cada vez que destruye una nave invasora, y se le penaliza cuando no toma ninguna acción. El agente toma como entrada una imagen de 640x480 que sirve como estado del ambiente, y la salida del agente es el valor Q de tomar una acción. Las acciones disponibles para el agente son: moverse a la izquierda, moverse a la derecha y disparar. El agente interactúa con el ambiente tomando la acción obtenida en su salida. 
+La interfaz gráfica El tipo de algoritmo de aprendizaje mecánico implementado fue Deep Q learning, que utiliza redes neuronales, en este caso una de predicciones y otra de objetivo, para explorar el juego e intentar aproximar un modelo que permita maximizar una recompensa obtenida. En este caso, al agente se le otorga una recompensa cada vez que destruye una nave invasora, y se le penaliza cuando no toma ninguna acción. El agente toma como entrada una imagen de 640x480 que sirve como estado del ambiente, y la salida del agente es el valor Q de tomar una acción. Las acciones disponibles para el agente son: moverse a la izquierda, moverse a la derecha y disparar. El agente interactúa con el ambiente tomando la acción obtenida en su salida. 
 
 Durante el proceso de desarrollo se encontraron varios desafíos:
 
@@ -40,7 +40,7 @@ Por defecto corre 10 iteraciones del juego.
 
 ### Clases implementadas:
 - Actions: contiene las acciones posibles que pueden ser tomadas en el juego.
-- Agent: clase que contiene la red de DeepQlearning del agente.
+- Agent: clase que contiene la red neuronal de DeepQlearning del agente, los hiperparámetros y el valor semilla para que el experimento sea repetible..
 - Bullet: maneja detalles del los proyectiles disparados.
 - Enemy Manager: manejador de oleadas, movimiento de enemigos y contadores de puntuación la recompensa del agente.
 - Enemy: contiene propiedades de los enemigos individualmente, los tipos de enemigos, y sus interacciones con el ambiente.
