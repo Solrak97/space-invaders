@@ -36,6 +36,7 @@ Otro factor que tenía es que el modelo tomaba una cantidad de tiempo considerab
 #
 
 Nota: el código para pruebas se encuentra en el archivo test_code.py en el directorio /Game/.
+Por defecto corre 10 iteraciones del juego.
 
 ### Clases implementadas:
 - Actions: contiene las acciones posibles que pueden ser tomadas en el juego.
