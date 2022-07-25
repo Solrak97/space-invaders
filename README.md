@@ -29,6 +29,7 @@ Otro factor que tenía es que el modelo tomaba una cantidad de tiempo considerab
 ![Alt Text](/Results/desafio4.png)
 
 - Otro desafío presentado en la fase de pruebas fue que al agente le costaba encontrar recompensas ya que la mayoría de los enemigos se encontraban en el centro de la pantalla. Esto se mitigó un poco con el nuevo modelo, donde se ejecutaron alrededor de 450 iteraciones de entrenamiento, cada una de alrededor de 1 minuto, ya que se aceleraron los enemigos. Además, se revisó el código y se encontró un error, ya que la función donde se comparaba el valor aleatorio con el valor epsilon_greedy no estaba. Esto se corrigió lo que llegó a dar mejores resultados:
+
 ![Alt Text](/Results/demo.gif)
 
 
