@@ -14,7 +14,7 @@ class Agent():
         self.kill_reward = 100
         self.discount_factor = 1e-3
         self.eps_greedy = 1
-        self.decay = 1e-4
+        self.decay = 1e-3
 
         random.seed(1337)
 
