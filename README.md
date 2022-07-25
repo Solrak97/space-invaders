@@ -12,6 +12,7 @@
 ![Alt Text](/Results/old1.jpg)
 ![Alt Text](/Results/old2.png)
 ![Alt Text](/Results/old3.jpg)
+
 El tipo de algoritmo de aprendizaje mecánico implementado fue Deep Q learning, que utiliza redes neuronales, en este caso una de predicciones y otra de objetivo, para explorar el juego e intentar aproximar un modelo que permita maximizar una recompensa obtenida. En este caso, al agente se le otorga una recompensa cada vez que destruye una nave invasora, y se le penaliza cuando no toma ninguna acción. El agente toma como entrada una imagen de 640x480 que sirve como estado del ambiente, y la salida del agente es el valor Q de tomar una acción. Las acciones disponibles para el agente son: moverse a la izquierda, moverse a la derecha y disparar. El agente interactúa con el ambiente tomando la acción obtenida en su salida. 
 
 Durante el proceso de desarrollo se encontraron varios desafíos:
