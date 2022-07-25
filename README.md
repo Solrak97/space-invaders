@@ -25,7 +25,7 @@ Otro factor que tenía es que el modelo tomaba una cantidad de tiempo considerab
 ![Alt Text](/Results/desafio2.png)
 - Dispara inicialmente, derriba algunas naves, y luego se va para la derecha y se queda ahí hasta perder.
 ![Alt Text](/Results/desafio3.png)
-- Modelo donde se incrementó el tamaño de las oleadas para que obtener recompensas fuera más fácil. Este modelo (model2.pth) presentó el mismo problema que el anterior, donde el agente no aprendía y se quedaba en una esquina hasta perder. 
+- Modelo donde se incrementó el tamaño de las oleadas para que obtener recompensas fuera más fácil. Este modelo (model2.pth) presentó el mismo problema que el anterior, donde el agente no aprendía y se quedaba en una esquina hasta perder. Se realizaron algunos cambios como cambiar la velocidad de los proyectiles, y con esto el modelo 2 aprendió a quedarse en medio disparando fijamente, lo que le dejaba una recompensa constante. Luego de eliminar algunos del medio, se movía un poco a los lados mientras disparaba.
 ![Alt Text](/Results/desafio4.png)
 
 - Otro desafío presentado en la fase de pruebas fue que al agente le costaba encontrar recompensas ya que la mayoría de los enemigos se encontraban en el centro de la pantalla. Esto se mitigó un poco con el nuevo modelo, donde se ejecutaron alrededor de 450 iteraciones de entrenamiento, cada una de alrededor de 1 minuto, ya que se aceleraron los enemigos. Además, se revisó el código y se encontró un error, ya que la función donde se comparaba el valor aleatorio con el valor epsilon_greedy no estaba. Esto se corrigió lo que llegó a dar mejores resultados:
