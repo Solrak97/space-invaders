@@ -21,7 +21,7 @@ pg.mixer.music.play()
 
 # Creación del modelo
 agent = Agent()   
-agent.load_model('model2.pth')
+agent.load_model('model3.pth')
 
 
 # Se corren 10 simulaciones del juego
